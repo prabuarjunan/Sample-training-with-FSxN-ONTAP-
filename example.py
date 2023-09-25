@@ -6,7 +6,7 @@ sudo mkdir /fsx
 sudo mount -t nfs svm-dns-name:/volume-junction-path /fsx
 
 # Mount the FSx volume
-sudo mount -t nfs 198.51.100.1:/vol1 /fsx
+sudo mount -t nfs IP_address:/vol1 /fsx
 
 # Define the FSx path where your data is mounted
 fsx_path = '/mnt/fsx'
