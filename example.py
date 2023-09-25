@@ -1,26 +1,18 @@
-import pandas as pd
-from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score
+# SSH into your SageMaker instance
+ssh -i "your-key.pem" ec2-user@your-sagemaker-instance-ip
 
-# Load your data from the CSV file
-data = pd.read_csv('data.csv')
+# Create a mount point
+sudo mkdir /fsx
+sudo mount -t nfs svm-dns-name:/volume-junction-path /fsx
 
-# Assuming your CSV contains a 'target' column for classification
-# Replace 'target' with your actual target column name
-X = data.drop(columns=['target'])
-y = data['target']
+# Mount the FSx volume
+sudo mount -t nfs 198.51.100.1:/vol1 /fsx
 
-# Split the data into training and testing sets
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+# Define the FSx path where your data is mounted
+fsx_path = '/mnt/fsx'
 
-# Initialize and train a RandomForestClassifier
-clf = RandomForestClassifier(random_state=42)
-clf.fit(X_train, y_train)
-
-# Make predictions on the test set
-y_pred = clf.predict(X_test)
-
-# Calculate accuracy
-accuracy = accuracy_score(y_test, y_pred)
-print(f"Model Accuracy: {accuracy}")
+# Load your data using pandas # data is the CSV
+def load_data():
+    fsx_data_path = os.path.join(fsx_path, 'your-data-directory')
+    data = pd.read_csv(os.path.join(fsx_data_path, 'data.csv'))
+    return data
